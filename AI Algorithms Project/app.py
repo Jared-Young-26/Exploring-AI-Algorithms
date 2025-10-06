@@ -30,7 +30,7 @@ if algo == "Regression":
         ys = [float(y) for y in y_vals.split(",")]
         # TODO: Call your regression function here
         slope, intercept = 0.5, 1.2  # placeholder
-        st.success(f"Slope: {slope}, Intercept: {intercept}")
+        st.success(f"Slope: {xs}, Intercept: {ys}")
         st.line_chart({"data": ys})  # quick visualization
 
 # K-means tab
@@ -45,10 +45,14 @@ elif algo == "K-means Clustering":
     col1, col2 = st.columns([1, 2])
     with col1:
         st.file_uploader("Upload a CSV")
+        if st.button("Run K-means"):
+            st.success(f"Hidden Layers: {hidden_layers}, Temperature: {temperature}")
     with col2:
         hidden_layers = st.slider("Hidden Layers", min_value=1, max_value=10, value=3, step=1)
         temperature = st.slider("Temperature", 0.0, 1.0, 0.7, 0.01)
-        st.write(f"Hidden Layers: {hidden_layers}, Temperature: {temperature}")
+       
+       
+        
     st.line_chart({"data": [1, 2, 3, 4, 5]})  # placeholder for clustering result
 
 # HMM tab
