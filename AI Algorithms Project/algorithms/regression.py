@@ -1,4 +1,5 @@
 # This is the regression algorithmn
+from data.data_parser import parse_data
 
 def regression_analysis(total_points, data_points):
     sum_x = 0
@@ -31,12 +32,12 @@ if __name__ == "__main__":
     if mode == "1":
         path = input("Enter the file path: ").replace('\\', '\\\\')
         with open(path, "r") as file:
-            lines = file.readlines().strip()
-            
-            
-    
-    values = input("Enter the x and y values separated by a comma (e.g., 1,2 2,3 3,4): ")
-    data_points = [values.split(",") for value in values.split(" ")]
-    slope, intercept = regression_analysis(len(data_points), data_points)
-    print(f"Slope: {slope}, Intercept: {intercept}")
-    
+            data_points = parse_data(file)
+        slope, intercept = regression_analysis(len(data_points), data_points)
+        print(f"Slope: {slope}, Intercept: {intercept}")
+    elif mode == "2":
+        values = input("Enter the x and y values separated by a comma (e.g., 1,2 2,3 3,4): ")
+        data_points = parse_data(values)
+        slope, intercept = regression_analysis(len(data_points), data_points)
+        print(f"Slope: {slope}, Intercept: {intercept}")
+    input("Press Enter to exit...")
