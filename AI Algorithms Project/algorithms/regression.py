@@ -1,43 +1,40 @@
-# This is the regression algorithmn
+# Regression analysis using NumPy for efficiency
+import numpy as np
 from data.data_parser import parse_data
 
-def regression_analysis(total_points, data_points):
-    sum_x = 0
-    sum_y = 0
-    i = 0
-    for x, y in data_points:
-        sum_x += x
-        sum_y += y
-        i += 1
-    x_avg = sum_x / total_points
-    y_avg = sum_y / total_points
-    variance_x = 0
-    for x, y in data_points:
-        i = ((x - x_avg) ** 2)
-        variance_x += i
-    variance_x = variance_x / (total_points - 1)
-    covariance_xy = 0
-    for x, y in data_points:
-        xi = (x - x_avg)
-        yi = (y - y_avg)
-        i = (xi * yi)
-        covariance_xy += i
-    covariance_xy = covariance_xy / (total_points - 1)
+
+def regression_analysis(data_points):
+    """
+    Perform linear regression on a list of (x, y) data points using NumPy.
+    Returns the slope and intercept of the best fit line.
+    """
+    data = np.array(data_points, dtype=float)
+    # Ensure there are at least two points to compute regression
+    if data.size == 0 or data.shape[0] < 2:
+        raise ValueError("At least two data points are required for regression.")
+    x = data[:, 0]
+    y = data[:, 1]
+    x_mean = np.mean(x)
+    y_mean = np.mean(y)
+    # Calculate variance and covariance using sample statistics (ddof=1)
+    variance_x = np.var(x, ddof=1)
+    covariance_xy = np.cov(x, y, ddof=1)[0, 1]
     slope = covariance_xy / variance_x
-    intercept = y_avg - slope * x_avg
+    intercept = y_mean - slope * x_mean
     return slope, intercept
+
 
 if __name__ == "__main__":
     mode = input("Please select a mode:\n1. File Input\n2. Manual Input\n")
     if mode == "1":
-        path = input("Enter the file path: ").replace('\\', '\\\\')
-        with open(path, "r") as file:
-            data_points = parse_data(file)
-        slope, intercept = regression_analysis(len(data_points), data_points)
+        path = input("Enter the file path: ").replace("\\", "\\\\")
+        # parse_data returns list of (x, y) tuples using pandas for CSV/Excel parsing
+        data_points = parse_data(path)
+        slope, intercept = regression_analysis(data_points)
         print(f"Slope: {slope}, Intercept: {intercept}")
     elif mode == "2":
         values = input("Enter the x and y values separated by a comma (e.g., 1,2 2,3 3,4): ")
         data_points = parse_data(values)
-        slope, intercept = regression_analysis(len(data_points), data_points)
+        slope, intercept = regression_analysis(data_points)
         print(f"Slope: {slope}, Intercept: {intercept}")
     input("Press Enter to exit...")
