@@ -67,17 +67,20 @@ def regression_analysis(data_points):
 
 
 if __name__ == "__main__":
-    mode = input("Please select a mode:\n1. File Input\n2. Manual Input\n")
-    if mode == "1":
-        path = input("Enter the file path: ").replace("\\", "\\\\")
-        # parse_data returns list of (x, y) tuples using pandas for CSV/Excel parsing
-        data_points = parse_data(path)
-        slope, intercept = regression_analysis(data_points)
-        print(f"Slope: {slope}, Intercept: {intercept}")
-    elif mode == "2":
-        values = input("Enter the x and y values separated by a comma (e.g., 1,2 2,3 3,4): ")
-        data_points = parse_data(values)
-        slope, intercept = regression_analysis(data_points)
-        print(f"Slope: {slope}, Intercept: {intercept}")
-    input("Press Enter to exit...")
+    while True:
+        mode = input("\n\nPlease select a mode or any other value to quit:\n1. File Input\n2. Manual Input\n")
+        if mode == "1":
+            path = input("Enter the file path: ").replace("\\", "\\\\")
+            # parse_data returns list of (x, y) tuples using pandas for CSV/Excel parsing
+            data_points = parse_data(path)
+            slope, intercept = regression_analysis(data_points)
+            print(f"Slope: {slope}, Intercept: {intercept}")
+        elif mode == "2":
+            values = input("Enter the x and y values separated by a comma (e.g., 1,2 2,3 3,4): ")
+            data_points = parse_data(values)
+            slope, intercept = regression_analysis(data_points)
+            print(f"Slope: {slope}, Intercept: {intercept}")
+        else:
+            break
+        input("Press Enter to exit...")
 
