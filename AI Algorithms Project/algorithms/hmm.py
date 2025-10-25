@@ -1,66 +1,22 @@
-"""
-Hidden Markov Model (HMM) algorithm skeleton.
-
-This module provides a class outline for a hidden Markov model.  
-Fill in the algorithmic details for forward, Viterbi, and Baum-Welch methods as needed.
-"""
-
+import random
+import pandas as pd
 import numpy as np
-from typing import List, Sequence, Optional
+import io
 
+def Hidden_Markov_Model_Path(set_of_states, set_of_emissions, transition_matrix, emission_matrix, initial_probability_vector, emission_sequence):
+    pass
 
-class HiddenMarkovModel:
-    """A simple hidden Markov model implementation."""
+def valid_emission(emission_sequence, set_of_emissions):
+    pass
 
-    def __init__(
-        self,
-        states: List[str],
-        observations: List[str],
-        transition_matrix: np.ndarray,
-        emission_matrix: np.ndarray,
-        initial_probs: np.ndarray,
-    ) -> None:
-        """
-        Initialize the HMM with states, observations, and probability matrices.
+def valid_transition(possible_transition, transition_matrix, set_of_states, initial_probability_vector):
+    pass
 
-        :param states: A list of hidden state labels.
-        :param observations: A list of observation symbols.
-        :param transition_matrix: A (N x N) matrix of state transition probabilities.
-        :param emission_matrix: A (N x M) matrix of emission probabilities.
-        :param initial_probs: A vector of initial state probabilities.
-        """
-        self.states = states
-        self.observations = observations
-        self.transition_matrix = transition_matrix
-        self.emission_matrix = emission_matrix
-        self.initial_probs = initial_probs
+def emission_set(emission, emission_matrix, set_of_emissions):
+    pass
 
-    def forward(self, sequence: Sequence[str]) -> float:
-        """
-        Compute the probability of an observation sequence using the forward algorithm.
+def calculate_probability(state_sequence, emission_sequence, set_of_states, set_of_emissions, transition_matrix, emission_matrix):
+    pass
 
-        :param sequence: A sequence of observed symbols.
-        :return: The likelihood of the observation sequence.
-        """
-        # TODO: Implement forward algorithm using dynamic programming
-        pass
-
-    def viterbi(self, sequence: Sequence[str]) -> List[str]:
-        """
-        Find the most likely sequence of hidden states for a given observation sequence.
-
-        :param sequence: A sequence of observed symbols.
-        :return: The most probable sequence of hidden states.
-        """
-        # TODO: Implement Viterbi algorithm to compute the best path
-        pass
-
-    def baum_welch(self, sequences: Sequence[Sequence[str]], max_iter: int = 100) -> None:
-        """
-        Train the HMM parameters using the Baum-Welch algorithm (EM).
-
-        :param sequences: A list of observation sequences to train on.
-        :param max_iter: Maximum number of iterations for the EM algorithm.
-        """
-        # TODO: Implement Baum-Welch algorithm for parameter estimation
-        pass
+if __name__=="__main__":
+    pass
