@@ -3,6 +3,14 @@ import pandas as pd
 import numpy as np
 import io
 
+    """
+    TODO: 
+    * Zero Division errors are common; might need some sort of validation step for seed points that are empty to skip over
+    """
+
+
+
+
 def parse_data(content):
     data_points = []
     
