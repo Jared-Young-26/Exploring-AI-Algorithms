@@ -1,11 +1,6 @@
 import numpy as np
 import io
 
-"""
-TODO:
-* Write up the best way to solve this scrapped the 
-"""
-
 # Activation Functions:
 def sigmoid(x):
     """This is the activation function used in the nerual network"""
@@ -94,6 +89,7 @@ def backpropagate(weights, biases, activations, y, learning_rate):
 
 def train_network(X, y, hidden_layers, num_outputs, learning_rate=0.1, bias_value=0.1, max_epochs=1000, error_threshold=0.01):
     """Trains a feedforward neural network."""
+    log = [] # Used for logging outputs to the GUI
     # Get the number of variable input features from the training data & initialize the neural network
     num_inputs = X.shape[1]
     weights, biases = initialize_network(num_inputs, hidden_layers, num_outputs, bias_value)
@@ -108,14 +104,14 @@ def train_network(X, y, hidden_layers, num_outputs, learning_rate=0.1, bias_valu
 
         # Print progress every 100 epochs or if the error is below the threshold
         if epoch % 100 == 0 or mse < error_threshold:
-            print(f"Epoch {epoch+1}/{max_epochs} - Error: {mse:.6f}")
+            log.append(f"Epoch {epoch+1}/{max_epochs} - Error: {mse:.6f}")
 
         # Stop training if the error is below the threshold
         if mse < error_threshold:
             break
     
     # Return the trained weights and biases
-    return weights, biases
+    return weights, biases, log
 
 # Prediction Function:
 def predict(X, weights, biases):

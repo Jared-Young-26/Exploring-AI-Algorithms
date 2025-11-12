@@ -1,20 +1,6 @@
 import itertools
 import io
 
-"""
-TODO:
-* Fix the input style to accept reading data from a file & Command line inputs
-* Optimize algorithm a little bit and skim any unused variables
-* THE CODE IS OUTPUTTING CORRECT RESULTS BUT COULD BE MADE MORE EFFICIENT
-* Add comments and docustrings
-* Pseudocode contains a while loop in the HMM function that reads emission sequence as input
-    Will have to modify the HMM parameter to remove the emission as a parameter and read it inside the function
-    Could move the iteration logic inside the init function for better structure to implement with WebGUI later for bonus
-    ...reference "HMM Code Debugging" --> Homework...
-"""
-
-
-
 epsilon = 0.00001
 
 def index(state, set_of_states):
@@ -42,17 +28,15 @@ def Hidden_Markov_Model_Path(set_of_states, set_of_emissions, transition_matrix,
                 if (valid_transition(path, transition_matrix, set_of_states, initial_probability_vector)):
                     set_of_potential_paths.append(path)
             #probability_score_sequence = []
+            log = []
             max_path = ("", 0.0)
             for path in set_of_potential_paths:
                 probability = calculate_probability(path, emission_sequence, set_of_states, set_of_emissions, transition_matrix, emission_matrix, initial_probability_vector)
                 #probability_score_sequence.append((path, probability))
-                print("The next probable sequence is: ", path, " with a probability of: ", probability)
+                log.append(f"The next probable sequence is: {path} with a probability of: {probability}")
                 if (probability > max_path[1]):
                     max_path = (path, probability)
-            return max_path
-                
-            
-            
+            return max_path, log
 
 def valid_emission(emission_sequence, set_of_emissions):
     for emission in emission_sequence:

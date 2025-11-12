@@ -17,16 +17,14 @@ def parse_data(content):
     # Case 1: Check if the content is a file-life object or a file path
     if hasattr(content, 'read') or (isinstance(content, str) and (content.endswith('.csv') or content.endswith('.xlsx'))):
         try:    
-            if hasattr(content, 'name') and content.endswith('.csv'): # Comes from an uploaded CSV file
-                df = pd.read_csv(content)
-            elif hasattr(content, 'name') and content.endswith('.xlsx'): # Comes from an uploaded Excel file
-                df = pd.read_excel(content)
-            elif isinstance(content, str) and content.endswith('.csv'): # Comes from a file path to a CSV file
-                df = pd.read_csv(content) 
-            elif isinstance(content, str) and content.endswith('.xlsx'): # Comes from a file path to an Excel file
-                df = pd.read_excel(content) 
-            else: 
-                raise ValueError("Please provide a valid CSV or Excel file.")
+            if hasattr(content, "read"):  # i.e., an uploaded file
+                filename = content.name.lower()
+                if filename.endswith(".csv"):
+                    df = pd.read_csv(content)
+                elif filename.endswith(".xlsx"):
+                    df = pd.read_excel(content)
+                else:
+                    raise ValueError("Please upload a valid CSV or Excel file.")
         
         except Exception as e:
             raise ValueError(f"Error reading the file: {e}")
@@ -58,6 +56,7 @@ def regression_analysis(data_points):
     Perform linear regression on a list of (x, y) data points using NumPy.
     Returns the slope and intercept of the best fit line.
     """
+    log = io.StringIO() # Used to output the results to the GUI
     data = np.array(data_points, dtype=float)
     # Ensure there are at least two points to compute regression
     if data.size == 0 or data.shape[0] < 2:
@@ -71,7 +70,12 @@ def regression_analysis(data_points):
     covariance_xy = np.cov(x, y, ddof=1)[0, 1]
     slope = covariance_xy / variance_x
     intercept = y_mean - slope * x_mean
-    return slope, intercept
+    
+    log.write(f"Mean of X: {x_mean:.4f}\nMean of Y: {y_mean:.4f}\n")
+    log.write(f"Variance of X: {variance_x:.4f}\nCovariance: {covariance_xy:.4f}\n")
+    log.write(f"Slope: {slope:.4f}\nIntercept: {intercept:.4f}\n")
+
+    return slope, intercept, log.getvalue()
 
 
 if __name__ == "__main__":

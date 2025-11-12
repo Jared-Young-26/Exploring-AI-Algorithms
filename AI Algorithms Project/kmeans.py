@@ -3,10 +3,6 @@ import pandas as pd
 import numpy as np
 import io
 
-"""
-TODO: 
-* Zero Division errors are common; might need some sort of validation step for seed points that are empty to skip over
-"""
 
 def parse_data(content):
     data_points = []
@@ -14,16 +10,15 @@ def parse_data(content):
     # Case 1: Check if the content is a file-life object or a file path
     if hasattr(content, 'read') or (isinstance(content, str) and (content.endswith('.csv') or content.endswith('.xlsx'))):
         try:    
-            if hasattr(content, 'name') and content.endswith('.csv'): # Comes from an uploaded CSV file
-                df = pd.read_csv(content)
-            elif hasattr(content, 'name') and content.endswith('.xlsx'): # Comes from an uploaded Excel file
-                df = pd.read_excel(content)
-            elif isinstance(content, str) and content.endswith('.csv'): # Comes from a file path to a CSV file
-                df = pd.read_csv(content) 
-            elif isinstance(content, str) and content.endswith('.xlsx'): # Comes from a file path to an Excel file
-                df = pd.read_excel(content) 
-            else: 
-                raise ValueError("Please provide a valid CSV or Excel file.")
+            if hasattr(content, "read"):  # i.e., an uploaded file
+                filename = content.name.lower()
+                if filename.endswith(".csv"):
+                    df = pd.read_csv(content)
+                elif filename.endswith(".xlsx"):
+                    df = pd.read_excel(content)
+                else:
+                    raise ValueError("Please upload a valid CSV or Excel file.")
+
         
         except Exception as e:
             raise ValueError(f"Error reading the file: {e}")
@@ -55,6 +50,7 @@ def kmeans(data_points, num_clusters, max_iterations, tolerance):
     A placeholder function for K-Means clustering algorithm.
     This function would typically include the implementation of the K-Means algorithm.
     """
+    log = [] # Used to output data to GUI
     total_points = len(data_points)
     seed_points, radius = generate_seed_points(data_points, num_clusters)
     count = 1 # Initialize the counter used to terminate after max number of iterations
@@ -67,34 +63,40 @@ def kmeans(data_points, num_clusters, max_iterations, tolerance):
             outliers = data_points.copy()
             clusters = [[] for _ in range(len(seed_points))]
             new_centroids = []
+            log.append(f"\nIteration {count}:")
             for i, centroid in enumerate(seed_points):
                 for j, point in enumerate(data_points):
                     d = np.sqrt((centroid[0] - point[0])**2 + (centroid[1] - point[1])**2)
                     if(d < radius):
                         clusters[i].append(point)
                         outliers.remove(point)
+                if len(clusters[i]) == 0:
+                    log.append(f"Cluster {i+1} is empty.")
+                    new_centroids.append(centroid)
+                    continue
                 sum_x = sum(point[0] for point in clusters[i])
                 sum_y = sum(point[1] for point in clusters[i])
                 cx_new = sum_x / len(clusters[i])
                 cy_new = sum_y / len(clusters[i])
-                print(f"Cluster {i + 1}: Centroid moved from ({float(centroid[0]):.1f}, {float(centroid[1]):.1f}) to ({float(cx_new):.1f}, {float(cy_new):.1f})")
+                log.append(f"Cluster {i + 1}: Centroid moved from ({float(centroid[0]):.1f}, {float(centroid[1]):.1f}) to ({float(cx_new):.1f}, {float(cy_new):.1f})")
                 new_centroids.append((cx_new, cy_new))
-            print(f"Current Outliers: {outliers}"); stabilized = True
+            log.append(f"Current Outliers: {format_points(outliers)}"); stabilized = True
             for i, new_centroid in enumerate(new_centroids):
                 centroid_shift = np.sqrt((seed_points[i][0] - new_centroid[0])**2 + (seed_points[i][1] - new_centroid[1])**2) # Calculate the centroid shift
                 if (centroid_shift > tolerance): stabilized = False # If the centroid shift is higher than the tolerance theshold the clusters are unstable
                 seed_points = new_centroids # Update the seed points to the new centroid values
             count += 1 # Go to the next iterative loop
-        print("Final Clusters and Outliers: ")
+        log.append("Final Clusters and Outliers: ")
         for i, cluster in enumerate(clusters):
-            print(f"Cluster {i+1}: {cluster}")
-        print(f"Outliers: {outliers}")
+            log.append(f"Cluster {i+1}: {format_points(cluster)}")
+        log.append(f"Outliers: {format_points(outliers)}")
+        return log
     except ZeroDivisionError:
-        print(f"Cluster {i+1} is empty. Try reducing the number of clusters or adjusting the dataset size")
-        return
+        log.append(f"Cluster {i+1} is empty. Try reducing the number of clusters or adjusting the dataset size")
+        return log
     except Exception as e:
-        print(f"Error: {e}")
-        return    
+        log.append(f"Error: {e}")
+        return log    
 
 def generate_seed_points(data_points, clusters):
     pairs = np.array(data_points)
@@ -154,6 +156,9 @@ def points_in_macroblocks(data_points, x_low, y_low, x_high, y_high):
         if((point[0] >= x_low) and (point[0] < x_high) and (point[1] >= y_low) and (point[1] < y_high)): macro_count += 1
     return macro_count      
         
+def format_points(points):
+    """Convert (np.float64, np.float64) -> (float, float)"""
+    return [f"({float(x):.2f}, {float(y):.2f})" for x, y in points] # Format data points to float types and round to 2 decimal places
 
 if __name__ == "__main__":
     while True:
