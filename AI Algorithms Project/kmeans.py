@@ -64,16 +64,20 @@ def kmeans(data_points, num_clusters, max_iterations, tolerance):
             clusters = [[] for _ in range(len(seed_points))]
             new_centroids = []
             log.append(f"\nIteration {count}:")
+            # Calculate the distance each point is away from each centroid
             for i, centroid in enumerate(seed_points):
                 for j, point in enumerate(data_points):
-                    d = np.sqrt((centroid[0] - point[0])**2 + (centroid[1] - point[1])**2)
+                    d = np.sqrt((centroid[0] - point[0])**2 + (centroid[1] - point[1])**2) # Calculate the distance
+                    # If the point is within the centroid radius to be classified in the cluster
                     if(d < radius):
                         clusters[i].append(point)
                         outliers.remove(point)
+                # Handles clusters that have no points within the defined radius
                 if len(clusters[i]) == 0:
                     log.append(f"Cluster {i+1} is empty.")
                     new_centroids.append(centroid)
                     continue
+                # Calculate the new centroid position from any new points added
                 sum_x = sum(point[0] for point in clusters[i])
                 sum_y = sum(point[1] for point in clusters[i])
                 cx_new = sum_x / len(clusters[i])

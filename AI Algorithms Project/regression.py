@@ -3,14 +3,6 @@ import numpy as np
 import pandas as pd
 import io
 
-"""
-TODO: 
-* Just read instructions and it looks like the other part to this is to take an input value and predict the output
-* Currently it is just outputting the slope and intercept of the line of best fit; just need to add the prediction part
-"""
-
-
-
 def parse_data(content):
     data_points = []
     

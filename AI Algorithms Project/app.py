@@ -1,6 +1,4 @@
-# ==================================================
 # AI Algorithms Project – Streamlit Dashboard
-# ==================================================
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -10,7 +8,7 @@ import hmm
 import ann
 import kmeans
 
-
+# Write the header of the page
 st.set_page_config(page_title="AI Algorithms Project", page_icon="🤖", layout="wide")
 st.title("🤖 AI Algorithms Project – Fall 2025")
 st.write("This interactive app demonstrates four key AI algorithms: Regression, K-Means Clustering, Hidden Markov Models, and Neural Networks.")
@@ -21,9 +19,8 @@ algo = st.sidebar.radio(
     ["Regression", "K-Means Clustering", "Hidden Markov Model", "Neural Network"]
 )
 
-# ==================================================
-# 1️⃣ LINEAR REGRESSION
-# ==================================================
+
+# LINEAR REGRESSION
 if algo == "Regression":
     st.header("📊 Linear Regression Analysis")
 
@@ -60,9 +57,8 @@ if algo == "Regression":
         except Exception as e:
             st.error(f"Error: {e}")
 
-# ==================================================
-# 2️⃣ K-MEANS CLUSTERING
-# ==================================================
+
+# K-MEANS CLUSTERING
 elif algo == "K-Means Clustering":
     st.header("፨ K-Means Clustering")
 
@@ -95,16 +91,15 @@ elif algo == "K-Means Clustering":
             log = kmeans.kmeans(data_points, num_clusters, max_iterations, tolerance)
             st.text_area("K-Means Progress", "\n".join(log), height=400)
 
-
+            # Graph data points
             df = pd.DataFrame(data_points, columns=["x", "y"])
             st.scatter_chart(df)
 
         except Exception as e:
             st.error(f"Error: {e}")
 
-# ==================================================
-# 3️⃣ HIDDEN MARKOV MODEL
-# ==================================================
+
+# HIDDEN MARKOV MODEL
 elif algo == "Hidden Markov Model":
     st.header("🔁 Hidden Markov Model (HMM)")
 
@@ -131,9 +126,8 @@ elif algo == "Hidden Markov Model":
         except Exception as e:
             st.error(f"Error: {e}")
 
-# ==================================================
-# 4️⃣ ARTIFICIAL NEURAL NETWORK
-# ==================================================
+
+# ARTIFICIAL NEURAL NETWORK
 elif algo == "Neural Network":
     st.header("🧬 Feedforward Neural Network (ANN)")
 
