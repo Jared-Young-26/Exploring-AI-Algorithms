@@ -51,6 +51,7 @@ if algo == "Regression":
             fig, ax = plt.subplots()
             ax.scatter(df["x"], df["y"], color="blue", label="Data")
             ax.plot(df["x"], slope * df["x"] + intercept, color="red", label="Best Fit Line")
+            ax.scatter(x_pred, y_pred, color="green", label="Predicted Value")
             ax.legend()
             st.pyplot(fig)
 
